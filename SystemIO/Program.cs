@@ -1,16 +1,17 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace SystemIO
 
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
             // Vinicio - we are relying on the intenal structure of the project
             string path = "../../../testFile.txt";
-            string[] startWords = { "josie", "kitty", "oscar", "molly", "coco" };
+            string[] startWords = { "josie", "kitty", "oscar", "molly", "coco" , "charlie", "bella", "lucy"};
             CreateFile(path, startWords);
             //CreateFile(path);
 
@@ -21,9 +22,15 @@ namespace SystemIO
             GameView(path);
         }
 
+        /// <summary>
+        /// method that calls the game
+        /// </summary>
+        /// <param name="path"></param>
         static void GameView(string path)
         {
             Console.WriteLine("Hello! Welcome to the guessing game.");
+            Console.WriteLine("The words are cat names");
+            Console.WriteLine("You can also add a word if you want.");
             Console.WriteLine("Make a selection from the options below to begin");
             Console.WriteLine(" 1 -- Play Game");
             Console.WriteLine(" 2 -- Edit Game");
@@ -48,6 +55,10 @@ namespace SystemIO
             }
         }
 
+        /// <summary>
+        /// Add words to the game, stored in testFile
+        /// </summary>
+        /// <param name="path"></param>
         public static void MakeChanges(string path)
         {
 
@@ -94,18 +105,19 @@ namespace SystemIO
 
         }
 
-        static void CreateFile(string path, string[] passWords)
+        /// <summary>
+        /// This method creates a file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="passWords"></param>
+        public static void CreateFile(string path, string[] passWords)
         {
             // Using statement (finally ALL IN ONE)
             try
             {
-                // Vinicio - the using is only making sure that you closer your file
                 using (StreamWriter streamWriter = new StreamWriter(path))
                 {
-                    // Vinicio - as soon as I leave this block. THe engine will dispose
-                    // streamWriter
-
-                    //Console.WriteLine("Gregor is the very best");
+                    
                     try
                     {
                         foreach (string word in passWords)
@@ -116,11 +128,9 @@ namespace SystemIO
                     }
                     catch (Exception)
                     {
-
                         throw;
                     }
                 }
-
             }
             catch (IOException e)
             {
@@ -156,50 +166,83 @@ namespace SystemIO
 
         }
 
+        /// <summary>
+        /// This is to start the game
+        /// </summary>
+        /// <param name="path"></param>
         public static void GameStart(string path)
         {
-            Console.WriteLine("Let's start the game!");
-            Console.WriteLine("Guess the characters of the word.");
-
-            string[] words = ReadWords(path);
-
             //select random word from the list
-
             Random random = new Random();
+            string[] words = ReadWords(path);
             int randomIndx = random.Next(words.Length);
 
-            string solutionWord = words[randomIndx];
-            string[] gussedChar = new string[solutionWord.Length];
+            string randomWord = words[randomIndx];
 
-            for (int i = 0; i < gussedChar.Length; i++)
+            string[] hiddenCharacters = new string[randomWord.Length];
+            
+
+            for (int i = 0; i < hiddenCharacters.Length; i++)
             {
-                gussedChar[i] = " _ ";
+
+                hiddenCharacters[i] = " _ ";
             }
 
-            foreach (string hiddenChar in gussedChar)
+            for (int i = 0; i < hiddenCharacters.Length; i++)
             {
-                Console.Write(hiddenChar);
-
+                Console.Write(hiddenCharacters[i]);
             }
-            //Console.WriteLine();
-            //based on the the number of letter output same number of _ _ _
 
+            Console.WriteLine();
+            bool gameWin = false;
+            string guessedLetter = "";
 
+            while (!gameWin)
+            {
+                Console.WriteLine("Guess the hidden letter, one letter at a time.");
+                string inputLetter = Console.ReadLine();
 
+                guessedLetter += inputLetter;
 
-            //if the user gets the letter correct replace _ with char
+                for (int i = 0; i < hiddenCharacters.Length; i++)
+                {
+                    if (string.Equals(hiddenCharacters[i], inputLetter, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        hiddenCharacters[i] = inputLetter;
+                    }
+                }
 
+                if (randomWord.Contains(inputLetter))
+                {
+                    for (int i = 0; i < randomWord.Length; i++)
+                    {
+                        if (randomWord[i].ToString() == inputLetter)
+                        {
+                            hiddenCharacters[i] = inputLetter;
+                        }
+                    }
+                }
+                Console.WriteLine($"These are your guesses so far: {guessedLetter}");
+                foreach (string character in hiddenCharacters)
+                {
+                    Console.Write(character);
+                }
+                Console.WriteLine();
 
-
-
-
-
-
-
-
+                if (!hiddenCharacters.Contains(" _ "))
+                {
+                    Console.WriteLine("Well done, you got it!");
+                    gameWin = true;
+                }
+            }
 
         }
 
+        /// <summary>
+        /// this is to add word in the test file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="newWord"></param>
         public static void WordAdd(string path, string newWord)
         {
             try
@@ -216,6 +259,11 @@ namespace SystemIO
             }
         }
 
+        /// <summary>
+        /// To remove word from the test file. However, when the game is run, the initial words will be added
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="wordToRemove"></param>
         public static void WordRemove(string path, string wordToRemove)
         {
             try
@@ -236,7 +284,11 @@ namespace SystemIO
             }
         }
 
-
+        /// <summary>
+        /// read teh words
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static string[] ReadWords(string path)
         {
             try
@@ -251,7 +303,10 @@ namespace SystemIO
             }
         }
 
-
+        /// <summary>
+        /// read the file
+        /// </summary>
+        /// <param name="path"></param>
         public static void ReadFile(string path)
         {
             try
@@ -274,7 +329,11 @@ namespace SystemIO
             }
         }
 
-
+        /// <summary>
+        /// append words to the file when called
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="newWord"></param>
         static void AppendToFile(string path, string newWord)
         {
             try
@@ -291,7 +350,10 @@ namespace SystemIO
             }
         }
 
-
+        /// <summary>
+        /// deletes the file
+        /// </summary>
+        /// <param name="path"></param>
         static void DeleteFile(string path)
         {
             try
@@ -306,7 +368,9 @@ namespace SystemIO
             }
         }
 
-
+        /// <summary>
+        /// not sure what it does
+        /// </summary>
         static void PlayingWithSplit()
         {
             char[] delimiterCharacters = { ' ', ',', '.', ':', '\t' };
