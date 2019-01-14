@@ -29,8 +29,9 @@ namespace SystemIO
         static void GameView(string path)
         {
             Console.WriteLine("Hello! Welcome to the guessing game.");
-            Console.WriteLine("The words are cat names");
-            Console.WriteLine("You can also add a word if you want.");
+            Console.WriteLine("You will have to guess a word. The word is a name of a cat.");
+            Console.WriteLine("You can also add a word in the saved list if you want.");
+            Console.WriteLine();
             Console.WriteLine("Make a selection from the options below to begin");
             Console.WriteLine(" 1 -- Play Game");
             Console.WriteLine(" 2 -- Edit Game");
@@ -177,14 +178,13 @@ namespace SystemIO
             string[] words = ReadWords(path);
             int randomIndx = random.Next(words.Length);
 
-            string randomWord = words[randomIndx];
+            string gameWord = words[randomIndx];
 
-            string[] hiddenCharacters = new string[randomWord.Length];
-            
+            string[] hiddenCharacters = new string[gameWord.Length];
 
+            //replace the hidden string with  " _ ", the length of hidden word is equal to the length of the solution word
             for (int i = 0; i < hiddenCharacters.Length; i++)
             {
-
                 hiddenCharacters[i] = " _ ";
             }
 
@@ -203,7 +203,7 @@ namespace SystemIO
                 string inputLetter = Console.ReadLine();
 
                 guessedLetter += inputLetter;
-
+          
                 for (int i = 0; i < hiddenCharacters.Length; i++)
                 {
                     if (string.Equals(hiddenCharacters[i], inputLetter, StringComparison.CurrentCultureIgnoreCase))
@@ -212,16 +212,17 @@ namespace SystemIO
                     }
                 }
 
-                if (randomWord.Contains(inputLetter))
+                if (gameWord.Contains(inputLetter))
                 {
-                    for (int i = 0; i < randomWord.Length; i++)
+                    for (int i = 0; i < gameWord.Length; i++)
                     {
-                        if (randomWord[i].ToString() == inputLetter)
+                        if (gameWord[i].ToString() == inputLetter)
                         {
                             hiddenCharacters[i] = inputLetter;
                         }
                     }
                 }
+                //replace the
                 Console.WriteLine($"These are your guesses so far: {guessedLetter}");
                 foreach (string character in hiddenCharacters)
                 {
@@ -232,10 +233,9 @@ namespace SystemIO
                 if (!hiddenCharacters.Contains(" _ "))
                 {
                     Console.WriteLine("Well done, you got it!");
-                    gameWin = true;
+                    gameWin = true;    
                 }
             }
-
         }
 
         /// <summary>
@@ -254,7 +254,6 @@ namespace SystemIO
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

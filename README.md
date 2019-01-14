@@ -10,3 +10,9 @@ The user can also check for the words on the list.
 
 #APIs
 The game does not use any API. The game has multiple methods that run one after another. 
+
+#Load Application 
+In the terminal git clone https://github.com/dev-pasa/Lab03-SystemIO.git
+Open the SystemIO.sln file in Visual Studio
+Open the file without debugging
+Play the game
