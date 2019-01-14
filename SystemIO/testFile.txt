@@ -3,3 +3,6 @@ kitty
 oscar
 molly
 coco
+charlie
+bella
+lucy
