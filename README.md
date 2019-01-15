@@ -16,3 +16,10 @@ In the terminal git clone https://github.com/dev-pasa/Lab03-SystemIO.git
 Open the SystemIO.sln file in Visual Studio
 Open the file without debugging
 Play the game
+
+#Game 
+![display1](/Assets/wordguess1.JPG)
+
+![display2](/Assets/wordguess2.JPG)
+
+![display3](/Assets/wordguess3.JPG)

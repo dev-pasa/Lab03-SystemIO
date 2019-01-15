@@ -11,16 +11,11 @@ namespace SystemIO
         {
             // Vinicio - we are relying on the intenal structure of the project
             string path = "../../../testFile.txt";
-            string[] startWords = { "josie", "kitty", "oscar", "molly", "coco" , "charlie", "bella", "lucy"};
-            CreateFile(path, startWords);
-            //CreateFile(path);
-
-            //ReadFile(path);
-            //AppendToFile(path);
-            //DeleteFile(path);
-            //PlayingWithSplit();
+            //string[] startWords = { "josie", "kitty", "oscar", "molly", "coco", "charlie", "bella", "lucy" };
+            //CreateFile(path, startWords);
             GameView(path);
         }
+
 
         /// <summary>
         /// method that calls the game
@@ -28,6 +23,9 @@ namespace SystemIO
         /// <param name="path"></param>
         static void GameView(string path)
         {
+            //string path = "../../../testFile.txt";
+            string[] startWords = { "josie", "kitty", "oscar", "molly", "coco", "charlie", "bella", "lucy" };
+            CreateFile(path, startWords);
             Console.WriteLine("Hello! Welcome to the guessing game.");
             Console.WriteLine("You will have to guess a word. The word is a name of a cat.");
             Console.WriteLine("You can also add a word in the saved list if you want.");
@@ -91,6 +89,7 @@ namespace SystemIO
                         Console.WriteLine("Enter the word you'd live to remove from the game: ");
                         string userRemove = Console.ReadLine();
                         WordRemove(path, userRemove);
+                        
                         break;
                     case 4:
                         Console.Clear();
@@ -268,17 +267,36 @@ namespace SystemIO
             try
             {
                 string[] words = ReadWords(path);
-                for (int i = 0; i < words.Length; i++)
+                using (StreamWriter sw = new StreamWriter(path))
                 {
-                    if (words[i] == wordToRemove)
+                    try
                     {
-                        words[i] = null;
+
+                        for (int i = 1; i < words.Length; i++)
+                        {
+                            if (words[i] != wordToRemove)
+                            {
+                                sw.WriteLine(words[i]);
+                            }
+                            else if (words[i] == wordToRemove)
+                            {
+                                Console.WriteLine($"{wordToRemove} has been removed.");
+                            }
+                        }
+                       
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        sw.Close();
                     }
                 }
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
